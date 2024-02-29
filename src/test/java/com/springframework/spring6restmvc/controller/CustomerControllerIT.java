@@ -34,6 +34,15 @@ class CustomerControllerIT {
         List<CustomerDTO> dtos = customerController.getAllCustomers();
         assertThat(dtos.size()).isEqualTo(3);
     }
+    
+    @Transactional
+    @Rollback
+    @Test
+    void testListAllEmptyList() {
+        customerRepository.deleteAll();
+        List<CustomerDTO> dtos = customerController.getAllCustomers();
+        assertThat(dtos.size()).isEqualTo(0);
+    }
 
     @Transactional
     @Rollback
@@ -51,8 +60,9 @@ class CustomerControllerIT {
         assertThat(dto).isNotNull();
     }
 
+
     @Test
-    void testCustomerIdNotFound() {
+    void testGetByIdNotFound() {
         assertThrows(NotFoundException.class, () ->{
             customerController.getCustomerById(UUID.randomUUID());
         });
@@ -116,6 +126,30 @@ class CustomerControllerIT {
     void testDeleteByIdNotFound() {
         assertThrows(NotFoundException.class, () ->{
            customerController.deleteById(UUID.randomUUID());
+        });
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    void patchExistingCustomer() {
+        Customer customer = customerRepository.findAll().get(0);
+        CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
+        customerDTO.setVersion(null);
+        customerDTO.setId(null);
+        final String customerName = "Patched";
+
+        ResponseEntity responseEntity = customerController.patchById(customer.getId(), customerDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        Customer patchedCustomer = customerRepository.findById(customer.getId()).get();
+        assertThat(patchedCustomer).isNotNull();
+    }
+
+    @Test
+    void testPatchByIdNotFound() {
+        assertThrows(NotFoundException.class, () ->{
+           customerController.patchById(UUID.randomUUID(), CustomerDTO.builder().build());
         });
     }
 }

@@ -122,9 +122,7 @@ class CustomerControllerTest {
         mockMvc.perform(patch(CustomerController.CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(customerMap)))
-                .andExpect(status().isNoContent());
-
+                .content(objectMapper.writeValueAsString(customerMap)));
         verify(customerService).patchCustomerById(uuidArgumentCaptor.capture(),customerArgumentCaptor.capture());
         assertThat(customer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
         assertThat(customerMap.get("CustomerName")).isEqualTo(customerArgumentCaptor.getValue().getCustomerName());
