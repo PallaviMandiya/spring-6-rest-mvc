@@ -3,14 +3,13 @@ package com.springframework.spring6restmvc.repositories;
 import com.springframework.spring6restmvc.bootstrap.BootstrapData;
 import com.springframework.spring6restmvc.entities.Beer;
 import com.springframework.spring6restmvc.model.BeerStyle;
-import com.springframework.spring6restmvc.services.BeerCsvService;
 import com.springframework.spring6restmvc.services.BeerCsvServiceImpl;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,8 +26,8 @@ class BeerRepositoryTest {
 
     @Test
     void testGetBeerListByName() {
-        List<Beer> list = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%");
-        assertThat(list.size()).isEqualTo(30);
+        Page<Beer> list = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%", null);
+        assertThat(list.getContent().size()).isEqualTo(30);
     }
 
     @Test
