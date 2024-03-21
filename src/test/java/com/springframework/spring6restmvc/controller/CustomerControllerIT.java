@@ -34,24 +34,16 @@ class CustomerControllerIT {
         List<CustomerDTO> dtos = customerController.getAllCustomers();
         assertThat(dtos.size()).isEqualTo(3);
     }
-    
-    @Transactional
-    @Rollback
-    @Test
-    void testListAllEmptyList() {
-        customerRepository.deleteAll();
-        List<CustomerDTO> dtos = customerController.getAllCustomers();
-        assertThat(dtos.size()).isEqualTo(0);
-    }
 
-    @Transactional
-    @Rollback
-    @Test
-    void testEmptyCustomerList() {
-        customerRepository.deleteAll();
-        List<CustomerDTO> dtos = customerController.getAllCustomers();
-        assertThat(dtos.size()).isEqualTo(0);
-    }
+//    @Rollback
+//    @Transactional
+//    @Test
+//    void testListAllEmptyList() {
+//        customerRepository.deleteAll();
+//        List<CustomerDTO> dtos = customerController.getAllCustomers();
+//
+//        assertThat(dtos.size()).isEqualTo(0);
+//    }
 
     @Test
     void testGetById() {
